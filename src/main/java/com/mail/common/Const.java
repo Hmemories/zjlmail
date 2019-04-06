@@ -9,6 +9,11 @@ public class Const {
     public static final String USERNAME="username";
     public static final String EMAIL ="email";
 
+    public interface RedisCacheTime{
+        int REDIS_SESSION_EXTIME = 60 * 30; //三十分钟
+
+    }
+
     public interface Role{
         int Role_Customer=0; //普通用户
         int Role_ADMIN=1;  //管理员

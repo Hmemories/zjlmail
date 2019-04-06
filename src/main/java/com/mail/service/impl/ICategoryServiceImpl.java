@@ -6,9 +6,8 @@ import com.mail.common.ServerResponse;
 import com.mail.dao.CategoryMapper;
 import com.mail.pojo.Category;
 import com.mail.service.ICategoryService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -18,9 +17,8 @@ import java.util.Set;
 
 
 @Service("iCategoryService")
+@Slf4j
 public class ICategoryServiceImpl implements ICategoryService {
-
-    private Logger logger= LoggerFactory.getLogger(ICategoryServiceImpl.class);
 
     @Autowired
     private CategoryMapper categoryMapper;
@@ -58,7 +56,7 @@ public class ICategoryServiceImpl implements ICategoryService {
     public ServerResponse<List<Category>> getChildrenParallelCategory(int categoryId){
         List<Category> categories = categoryMapper.selectChildrenCategory(categoryId);
        if(CollectionUtils.isEmpty(categories)){
-            logger.info("未找到当前分类的子分类");
+            log.info("未找到当前分类的子分类");
        }
        return ServerResponse.createBySuccess(categories);
     }
