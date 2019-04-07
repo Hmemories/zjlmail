@@ -2,11 +2,11 @@ package com.mail.service.impl;
 
 import com.mail.common.Const;
 import com.mail.common.ServerResponse;
-import com.mail.common.TokenCache;
 import com.mail.dao.UserMapper;
 import com.mail.pojo.User;
 import com.mail.service.IUserService;
 import com.mail.util.MD5Util;
+import com.mail.util.RedisPoolUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -92,8 +92,8 @@ public class IUserServiceImpl  implements IUserService {
         if (resutCount>0){
             //问题及问题答案正确
             String forgetToken = UUID.randomUUID().toString();
-
-            TokenCache.setKey(TokenCache.TOKEN_PREFIX+username,forgetToken);
+            RedisPoolUtil.setEx(Const.TOKEN_PREFIX+username,60*60*24,forgetToken);
+//            TokenCache.setKey(TokenCache.TOKEN_PREFIX+username,forgetToken);
             return ServerResponse.createBySuccessMsg(forgetToken);
 
         }
@@ -108,7 +108,8 @@ public class IUserServiceImpl  implements IUserService {
             return ServerResponse.createByErrorMsg("用户不存在");
         }
         //获取本地缓存
-        String token= TokenCache.getkey(TokenCache.TOKEN_PREFIX+username);
+//        String token= TokenCache.getkey(TokenCache.TOKEN_PREFIX+username);
+        String token = RedisPoolUtil.get(Const.TOKEN_PREFIX+username);
 
         if (StringUtils.isBlank(token)){
             return ServerResponse.createByErrorMsg("token");

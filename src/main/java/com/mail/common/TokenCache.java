@@ -6,6 +6,9 @@ import com.google.common.cache.LoadingCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 已经不用了，切换到了redis
+ */
 public class TokenCache {
     private static Logger logger = LoggerFactory.getLogger(TokenCache.class);
     public static String TOKEN_PREFIX="token_";

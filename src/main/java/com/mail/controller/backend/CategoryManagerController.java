@@ -5,12 +5,17 @@ import com.mail.common.ServerResponse;
 import com.mail.pojo.User;
 import com.mail.service.ICategoryService;
 import com.mail.service.IUserService;
+import com.mail.util.CookieUtil;
+import com.mail.util.JsonUtil;
+import com.mail.util.RedisPoolUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -24,8 +29,13 @@ public class CategoryManagerController {
 
     @RequestMapping("add_category.do")
     @ResponseBody
-    public ServerResponse addCategory(HttpSession session,String categoryName,@RequestParam(value ="parent",defaultValue = "0") int parentId){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse addCategory(HttpServletRequest httpServletRequest, String categoryName, @RequestParam(value ="parent",defaultValue = "0") int parentId){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)){
+            return ServerResponse.createByErrorMsg("用户未登录,无法获取当前用户信息");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.string2Obj(userJsonStr,User.class);
         if (user == null) {
             return ServerResponse.createByErrorMsg("需要登陆");
         }
@@ -40,8 +50,13 @@ public class CategoryManagerController {
 
     @RequestMapping("set_category_name.do")
     @ResponseBody
-    public ServerResponse setCategoryName(HttpSession session,Integer categoryId,String categoryName){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public ServerResponse setCategoryName(HttpServletRequest httpServletRequest,Integer categoryId,String categoryName){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)){
+            return ServerResponse.createByErrorMsg("用户未登录,无法获取当前用户信息");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.string2Obj(userJsonStr,User.class);
         if (user == null) {
             return ServerResponse.createByErrorMsg("需要登陆");
         }
@@ -54,8 +69,13 @@ public class CategoryManagerController {
 
     @RequestMapping("get_category.do")
     @ResponseBody
-    public  ServerResponse getChildrenParallelCategory(HttpSession session,@RequestParam(value =" categoryId" ,defaultValue = "0") int categoryId){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public  ServerResponse getChildrenParallelCategory(HttpServletRequest httpServletRequest,@RequestParam(value =" categoryId" ,defaultValue = "0") int categoryId){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)){
+            return ServerResponse.createByErrorMsg("用户未登录,无法获取当前用户信息");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.string2Obj(userJsonStr,User.class);
         if (user == null) {
             return ServerResponse.createByErrorMsg("需要登陆");
         }
@@ -69,8 +89,13 @@ public class CategoryManagerController {
 
     @RequestMapping("get_deep_category.do")
     @ResponseBody
-    public  ServerResponse getCategoryAndDeepChildrenCategory(HttpSession session,@RequestParam(value =" categoryId" ,defaultValue = "0") int categoryId){
-        User user = (User) session.getAttribute(Const.CURRENT_USER);
+    public  ServerResponse getCategoryAndDeepChildrenCategory(HttpServletRequest httpServletRequest,@RequestParam(value =" categoryId" ,defaultValue = "0") int categoryId){
+        String loginToken = CookieUtil.readLoginToken(httpServletRequest);
+        if(StringUtils.isEmpty(loginToken)){
+            return ServerResponse.createByErrorMsg("用户未登录,无法获取当前用户信息");
+        }
+        String userJsonStr = RedisPoolUtil.get(loginToken);
+        User user = JsonUtil.string2Obj(userJsonStr,User.class);
         if (user == null) {
             return ServerResponse.createByErrorMsg("需要登陆");
         }
